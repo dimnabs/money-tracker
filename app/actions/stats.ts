@@ -28,10 +28,23 @@ export async function getStatisticsData(userId: string): Promise<StatisticData> 
         }
     });
 
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
     const allBudgets = await prisma.budget.findMany({
         where: {
             userId: userId,
-        }
+            OR: [
+                { startYear: { lt: now.getFullYear() } },
+                {
+                    startYear: now.getFullYear(),
+                    startMonth: { lte: now.getMonth() + 1 },
+                },
+            ],
+        },
+        include: {
+            categories: { select: { categoryId: true } },
+        },
     });
 
     let budgetsRemaining = 0;
@@ -43,11 +56,8 @@ export async function getStatisticsData(userId: string): Promise<StatisticData> 
             where: {
                 userId: userId,
                 type: 'EXPENSE',
-                categoryId: budget.categoryId,
-                createdAt: {
-                    gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-                    lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
-                },
+                categoryId: { in: budget.categories.map(({ categoryId }) => categoryId) },
+                date: { gte: monthStart, lt: monthEnd },
             }
         });
 
