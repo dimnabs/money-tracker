@@ -3,6 +3,7 @@ import {
     ArrowLeftRight,
     Wallet,
     Tags,
+    PiggyBank,
     type LucideIcon,
 } from "lucide-react";
 
@@ -34,5 +35,10 @@ export const navItems: NavItem[] = [
         title: "Categories",
         url: "/categories",
         icon: Tags,
+    },
+    {
+        title: "Budgets",
+        url: "/budgets",
+        icon: PiggyBank,
     },
 ];

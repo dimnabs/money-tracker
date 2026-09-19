@@ -148,6 +148,7 @@ export async function createTransaction(data: CreateTransactionInput) {
       revalidatePath("/transactions");
       revalidatePath("/dashboard");
       revalidatePath("/wallets");
+      revalidatePath("/budgets");
 
   } catch (error) {
       console.error("Failed to create transaction", error);
@@ -205,6 +206,7 @@ export async function deleteTransaction(id: string) {
         revalidatePath("/transactions");
         revalidatePath("/dashboard");
         revalidatePath("/wallets");
+        revalidatePath("/budgets");
     } catch (error) {
         console.error("Failed to delete transaction", error);
         throw new Error("Failed to delete transaction");

@@ -2,11 +2,9 @@ import { z } from "zod";
 import { amountSchema } from "./common.schema";
 
 export const createBudgetSchema = z.object({
-  categoryId: z.string().cuid(),
+  name: z.string().trim().min(1, "Budget name is required").max(80, "Budget name is too long"),
+  categoryIds: z.array(z.string().cuid()).min(1, "Select at least one category"),
   amount: amountSchema,
-  month: z
-    .string()
-    .regex(/^\d{4}-\d{2}$/, "Format: YYYY-MM"),
 });
 
 export type CreateBudgetInput = z.infer<
